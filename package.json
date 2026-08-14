@@ -1,6 +1,6 @@
 {
   "name": "prettier-plugin-markdown-dart",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Format Dart fenced code blocks in Markdown with Prettier and dart format.",
   "main": "./src/index.js",
   "exports": "./src/index.js",
