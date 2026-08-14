@@ -19,6 +19,10 @@
     "formatter"
   ],
   "author": "Dongmin Yu",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AndrewDongminYoo/prettier-plugin-markdown-dart.git"
+  },
   "license": "MIT",
   "engines": {
     "node": ">=18"
