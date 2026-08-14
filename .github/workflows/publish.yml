@@ -29,6 +29,16 @@ jobs:
         with:
           sdk: stable
 
+      - name: Verify release tag
+        env:
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+        run: |
+          expected_tag="v$(node -p 'require("./package.json").version')"
+          if [ "$RELEASE_TAG" != "$expected_tag" ]; then
+            printf 'Release tag %s must equal %s\\n' "$RELEASE_TAG" "$expected_tag" >&2
+            exit 1
+          fi
+
       - run: pnpm install --frozen-lockfile
       - run: pnpm test
       - run: npm publish --access public
