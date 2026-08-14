@@ -35,7 +35,8 @@ So the "AST" is a one-node wrapper around a string, and all real work happens in
 Two design decisions explain most of the file, and both are load-bearing:
 
 **Failure is silent and lossless.**
-`formatDart` resolves `undefined` for every failure mode — spawn error, non-zero exit, 30s timeout, oversized output — and `parse` applies `?? text`, leaving the block exactly as written.
+`formatDart` resolves `undefined` for every failure mode — spawn error, non-zero exit, 30s timeout — and `parse` applies `?? text`, leaving the block exactly as written.
+The 30s timeout is the only bound on a runaway `dart`; an output-length cap was removed deliberately, so do not reintroduce one without a measured reason.
 An in-progress example with broken syntax must never block formatting of the surrounding document.
 stderr is drained and discarded on purpose (`docs/specs/...md:252`); do not surface it without a decision to change the v1 API.
 

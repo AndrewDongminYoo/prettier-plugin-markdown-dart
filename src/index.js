@@ -1,7 +1,6 @@
 import { spawn } from "node:child_process";
 import path from "node:path";
 
-const maximumOutputLength = 10 * 1024 * 1024;
 const formatTimeout = 30_000;
 
 let missingDartReported = false;
@@ -42,19 +41,8 @@ function formatDart(source, filepath) {
     );
 
     let stdout = "";
-    let outputExceededLimit = false;
     child.stdout.setEncoding("utf8");
     child.stdout.on("data", (chunk) => {
-      if (outputExceededLimit) {
-        return;
-      }
-
-      if (stdout.length + chunk.length > maximumOutputLength) {
-        outputExceededLimit = true;
-        child.kill();
-        return;
-      }
-
       stdout += chunk;
     });
     child.stderr.resume();
@@ -71,7 +59,7 @@ function formatDart(source, filepath) {
       }
     });
     child.on("close", (exitCode) => {
-      resolve(exitCode === 0 && !outputExceededLimit ? stdout : undefined);
+      resolve(exitCode === 0 ? stdout : undefined);
     });
     child.stdin.end(source);
   });
