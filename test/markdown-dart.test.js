@@ -15,6 +15,16 @@ async function formatMarkdown(source, filepath, options = {}) {
   });
 }
 
+/** Writes analysis_options.yaml at a temporary root and returns a Markdown path one directory below it. */
+async function withAnalysisOptions(analysisOptions) {
+  const root = await mkdtemp(path.join(tmpdir(), "prettier-markdown-dart-"));
+  const docs = path.join(root, "docs");
+  await mkdir(docs);
+  await writeFile(path.join(root, "analysis_options.yaml"), analysisOptions);
+
+  return path.join(docs, "example.md");
+}
+
 test("formats a Dart fenced block", async () => {
   const source = "```dart\nvoid main(){print('hello');}\n```\n";
 
@@ -25,12 +35,7 @@ test("formats a Dart fenced block", async () => {
 });
 
 test("uses trailing comma preservation from analysis_options.yaml", async () => {
-  const root = await mkdtemp(path.join(tmpdir(), "prettier-markdown-dart-"));
-  const docs = path.join(root, "docs");
-  const markdownPath = path.join(docs, "example.md");
-  await mkdir(docs);
-  await writeFile(
-    path.join(root, "analysis_options.yaml"),
+  const markdownPath = await withAnalysisOptions(
     "formatter:\n  page_width: 20\n  trailing_commas: preserve\n",
   );
 
@@ -43,12 +48,7 @@ test("uses trailing comma preservation from analysis_options.yaml", async () => 
 });
 
 test("uses page width from analysis_options.yaml", async () => {
-  const root = await mkdtemp(path.join(tmpdir(), "prettier-markdown-dart-"));
-  const docs = path.join(root, "docs");
-  const markdownPath = path.join(docs, "example.md");
-  await mkdir(docs);
-  await writeFile(
-    path.join(root, "analysis_options.yaml"),
+  const markdownPath = await withAnalysisOptions(
     "formatter:\n  page_width: 20\n",
   );
 
