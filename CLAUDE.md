@@ -13,7 +13,8 @@ pnpm exec prettier --check README.md docs/    # format check, always with explic
 pnpm pack --pack-destination /private/tmp     # inspect the publishable tarball
 ```
 
-There is no lint script, no trunk config, and no build step.
+There is no lint script or build step.
+Quality tools are configured in `.trunk/trunk.yaml`; run `trunk check --all --no-fix --jobs=2` for the full scan.
 The published artifact is `src/index.js` verbatim.
 
 Verified on 2026-08-14: Dart 3.13.0, Node 24.19.0, prettier 3.9.6, 5/5 tests pass.
@@ -22,7 +23,7 @@ Verified on 2026-08-14: Dart 3.13.0, Node 24.19.0, prettier 3.9.6, 5/5 tests pas
 
 The plugin never parses, prints, or otherwise touches Markdown.
 It registers a `dart` language, parser, and printer, and lets Prettier's own embedded-language mechanism route fenced-block bodies to it.
-Everything lives in `src/index.js` (~78 lines).
+The plugin implementation lives in `src/index.js`.
 
 The flow for one fenced block:
 
@@ -38,7 +39,7 @@ Two design decisions explain most of the file, and both are load-bearing:
 `formatDart` resolves `undefined` for every failure mode — spawn error, non-zero exit, 30s timeout — and `parse` applies `?? text`, leaving the block exactly as written.
 The 30s timeout is the only bound on a runaway `dart`; an output-length cap was removed deliberately, so do not reintroduce one without a measured reason.
 An in-progress example with broken syntax must never block formatting of the surrounding document.
-stderr is drained and discarded on purpose (`docs/specs/...md:252`); do not surface it without a decision to change the v1 API.
+`formatDart` drains and discards stderr with `child.stderr.resume()` in `src/index.js`; do not surface it without a decision to change the v1 API.
 
 The one exception is a missing `dart` executable, which warns once per process.
 Without it, a machine with no Dart SDK is indistinguishable from a fully formatted document: `--check` exits 0 having formatted nothing.
