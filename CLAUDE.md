@@ -75,3 +75,11 @@ The workflow installs a Dart SDK because `pnpm test` cannot run without one.
 `docs/specs/2026-08-14-markdown-dart-formatting.md` holds the goals, constraints, and explicit non-goals (no CLI, no VS Code extension, no other fenced languages, no custom YAML parser).
 `docs/plans/2026-08-14-markdown-dart-formatting.md` is the completed implementation plan.
 Check the non-goals list before adding scope.
+
+## Offline Secret Reader
+
+Run `python3 -B .trunk/configs/tests/test_trufflehog_to_sarif.py` for the separate standard-library tooling regressions.
+CI runs this exact file independently of the existing application checks.
+The configured filesystem scanner uses `--no-verification --no-update`; its local SARIF reader retains decoded findings without exposing secret values.
+Run `trunk check --all --no-fix --jobs=2` for the full configured quality scan.
+Other scanners may use advisory or tool metadata services; the filesystem flags do not make the entire Trunk run network-free.
