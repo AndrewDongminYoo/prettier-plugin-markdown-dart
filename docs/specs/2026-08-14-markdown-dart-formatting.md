@@ -56,7 +56,7 @@ The README will make the `dart` executable prerequisite explicit.
 
 ## Package Boundary
 
-The package contains only its source, tests, README, an MIT license for Dongmin Yu dated 2026, and package metadata needed for installation.
+The package contains only its source, tests, README, an MIT license dated 2026, and package metadata needed for installation.
 It has no runtime dependency beyond Node's standard library and a compatible Prettier peer dependency.
 
 The supported Prettier and Node ranges will be stated explicitly in `package.json` and exercised by the test matrix.
