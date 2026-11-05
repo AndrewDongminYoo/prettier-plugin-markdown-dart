@@ -29,5 +29,5 @@ Use the existing Dart SDK for integration tests; do not replace it with a mock o
 
 ## Publication
 
-Keep changes local until the operator approves publication for this repository.
+Keep changes local until publication is approved for this repository.
 After approval, continue CI and hosted review through the gated merge and requested cleanup and memory record.
